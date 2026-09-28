@@ -1,6 +1,5 @@
 import random
 
-
 WORDS = [
     "adventure", "beautiful", "breakfast", "chocolate", "watermelon",
     "strawberry", "pineapple", "restaurant", "conversation", "friendship",
@@ -85,75 +84,73 @@ WORDS = [
 
 
 def play_hangman():
-    secret_word = random.choice(WORDS)
-
+    secret_word = random.choice(WORDS).lower()
     guessed_letters = []
     max_attempts = 6
     wrong_attempts = 0
-    print("_" * 200)
-    print("""
-                                ██╗  ██╗ █████╗ ███╗   ██╗ ██████╗ ███╗   ███╗ █████╗ ███╗   ██╗     ██████╗  █████╗ ███╗   ███╗███████╗
-                                ██║  ██║██╔══██╗████╗  ██║██╔════╝ ████╗ ████║██╔══██╗████╗  ██║    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝
-                                ███████║███████║██╔██╗ ██║██║  ███╗██╔████╔██║███████║██╔██╗ ██║    ██║  ███╗███████║██╔████╔██║█████╗  
-                                ██╔══██║██╔══██║██║╚██╗██║██║   ██║██║╚██╔╝██║██╔══██║██║╚██╗██║    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  
-                                ██║  ██║██║  ██║██║ ╚████║╚██████╔╝██║ ╚═╝ ██║██║  ██║██║ ╚████║    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗
-                                ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝
-""")
-    print()
-    print("_" * 200)
 
+    print("=" * 115)
+    print(r"""
+██╗  ██╗ █████╗ ███╗   ██╗ ██████╗ ███╗   ███╗ █████╗ ███╗   ██╗     ██████╗  █████╗ ███╗   ███╗███████╗
+██║  ██║██╔══██╗████╗  ██║██╔════╝ ████╗ ████║██╔══██╗████╗  ██║    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝
+███████║███████║██╔██╗ ██║██║  ███╗██╔████╔██║███████║██╔██╗ ██║    ██║  ███╗███████║██╔████╔██║█████╗  
+██╔══██║██╔══██║██║╚██╗██║██║   ██║██║╚██╔╝██║██╔══██║██║╚██╗██║    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  
+██║  ██║██║  ██║██║ ╚████║╚██████╔╝██║ ╚═╝ ██║██║  ██║██║ ╚████║    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝
+""")
+    print("=" * 115)
+    print("=== Welcome to Hangman Game! ===")
+
+    # Difficulty selection loop
     while True:
-        print("""
-Choose Your Difficulty Level
-
-1. Easy   - 3 letters revealed
-2. Medium - 2 letters revealed
-3. Hard   - 1 letter revealed
-4. Exit
-""")
+        print("\nChoose difficulty level:")
+        print("1. Easy   (2 letters revealed)")
+        print("2. Medium (1 letter revealed)")
+        print("3. Hard   (0 letters revealed)")
+        print("4. Exit")
 
         level = input("Enter choice (1, 2, 3 or 4): ").strip()
 
         if level == "1":
-            reveal_count = 3
+            reveal_count = 2
             print("You chose Easy mode!")
             break
 
         elif level == "2":
-            reveal_count = 2
+            reveal_count = 1
             print("You chose Medium mode!")
             break
 
         elif level == "3":
-            reveal_count = 1
+            reveal_count = 0
             print("You chose Hard mode!")
             break
-
         elif level == "4":
             print("Exiting the game. Goodbye!")
-            return
-
+            return False
         else:
             print("Invalid selection! Please enter 1, 2, 3 or 4.")
+            print("Invalid selection! Please enter 1, 2, 3 or 4.")
 
-    # Find unique letters
+    # Find unique letters manually using loop
     unique_letters = []
 
     for letter in secret_word:
         if letter not in unique_letters:
             unique_letters.append(letter)
 
-    # Randomly reveal starting letters
+    # Randomly reveal letters based on difficulty
     random.shuffle(unique_letters)
-
     for i in range(min(reveal_count, len(unique_letters))):
         guessed_letters.append(unique_letters[i])
 
-    print("Initial revealed letters:", guessed_letters)
+    if len(guessed_letters) > 0:
+        print("Initial revealed letters:", guessed_letters)
+    else:
+        print("No hint letters revealed for this level!")
 
     # Main game loop
     while wrong_attempts < max_attempts:
-
         display_word = ""
 
         for letter in secret_word:
@@ -165,7 +162,7 @@ Choose Your Difficulty Level
         print("\nWord:", display_word.strip())
         print("Remaining attempts:", max_attempts - wrong_attempts)
 
-        # Check win
+        # Check win condition manually
         won = True
 
         for letter in secret_word:
@@ -174,14 +171,12 @@ Choose Your Difficulty Level
                 break
 
         if won:
-            print("\nCongratulations!")
-            print("You solved the word:", secret_word)
-            return
+            print("\n Congratulations! You solved the word:", secret_word)
+            return True
 
-        # Take guess
+        # Take user guess
         guess = input("Guess a letter: ").lower().strip()
 
-        # Validate input
         if len(guess) != 1 or not guess.isalpha():
             print("Invalid input! Enter only one letter.")
             continue
@@ -193,26 +188,27 @@ Choose Your Difficulty Level
 
         guessed_letters.append(guess)
 
-        # Check guess
         if guess in secret_word:
             print(f"Correct guess! '{guess}' is present in the word.")
         else:
             wrong_attempts += 1
             print(f"Wrong guess! '{guess}' is not in the word.")
 
-    # Game over
-    print("\nGame Over!")
-    print("The word was:", secret_word)
+    # Loss condition
+    if wrong_attempts == max_attempts:
+        print("\n Game Over! You ran out of attempts.")
+        print("The correct word was:", secret_word)
+
+    return True
 
 
-# Run the game
+# Run the game loop
 while True:
-    play_hangman()
+    should_continue = play_hangman()
+    if not should_continue:
+        break
 
     choice = input("\nDo you want to play again? (y/n): ").lower().strip()
-
     if choice != "y":
         print("Thank you for playing! Goodbye!")
         break
-
-    print("\nStarting a new game...")
